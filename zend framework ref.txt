@@ -1,0 +1,87 @@
+1.database configuration ->public/db_constants.php
+2.header -> zend->view->helper->menubilder.php
+
+
+****************************
+work document.
+1.super admin creaditionals.
+admin@quantumqbook.in
+Adm@Adm@11
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+CREATE TABLE `main_emplogin` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `login_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `emp_name` varchar(255) DEFAULT NULL,
+  `check_in` time DEFAULT NULL,
+  `check_out` time DEFAULT NULL,
+  `c_date` date DEFAULT NULL,
+  `createdby` int(11) UNSIGNED DEFAULT NULL,
+  `modifiedby` int(11) UNSIGNED DEFAULT NULL,
+  `createddate` datetime DEFAULT NULL,
+  `modifieddate` datetime DEFAULT NULL,
+  `isactive` tinyint(1) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `main_emplogin`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `main_emplogin`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+COMMIT;
+
+ALTER TABLE `main_emplogin` ADD `reason_value` LONGTEXT NULL AFTER `c_date`; 
+ALTER TABLE `main_emplogin` ADD `reason_comment` LONGTEXT NULL AFTER `reason_value`; 
+
+ALTER TABLE `main_emplogin` CHANGE `reason_value` `reason_value` VARCHAR(225) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL; 
+ALTER TABLE `main_emplogin` CHANGE `reason_comment` `reason_comment` VARCHAR(225) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL; 
+
+$('.checkinout_entry').click(function(){
+		var value = $(this).data('val');
+		var updateid = $(this).data('updateid');
+		if(value==0 && updateid==0)
+		{
+			$.ajax({
+				type: 'POST',
+				url: base_url + '/index/logout',
+				success : function(){
+					window.location.reload();
+				}
+			});
+			window.location.reload();
+		}
+		else
+		{
+			$.ajax({
+				type: 'POST',
+				url: base_url + '/employeelogin/index',
+				data: {
+					'login_value': value,
+					'updateid':updateid
+				},
+				success : function(response){
+					window.location.reload();
+					// if(response['result'] == 'saved'){
+					// 	$('#resppdiv').show();
+					// 	$('#respp').html('Your feedback is saved successfully.').show();
+					// 	feedback_file = $('#feedback-file-name').val();
+					// 	$('#uploaded-file-name-span').html('<a href="' + $('#baseurl').val() + '/empscreening/download?feedback_file=' + feedback_file + '">' + feedback_file + '</a>');
+					// 	$('#delete-feedback').show();					
+					// 	setTimeout(function(){
+					// 		$('#resppdiv').css('display','none');
+					// 	},1000);					
+					// }
+				}
+			});
+			var title = "";
+			var text = 'Check In SuccessFully';
+			_success(title, text);
+			setTimeout(function() {
+				window.location.reload();
+			}, 3000);
+		}
+	});
